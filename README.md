@@ -1,2 +1,2 @@
 # simple-db-mcp-server
-This MCP Server connects to a local DB and performs based CRUD operations. 
+This MCP Server connects to a local DB and performs basic CRUD operations. 
