@@ -10,6 +10,9 @@ from langchain_mcp_adapters.tools import load_mcp_tools
 
 # LangChain utility to initialize a chat model (in this case, Gemini)
 from langchain.chat_models import init_chat_model
+import os
+from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 
 # Set up logging
@@ -27,6 +30,8 @@ server_params = StdioServerParameters(
 
 MAX_HISTORY_MESSAGES = 20  # 10 pairs of user+assistant
 
+GOOGLE_API_KEY = "<YOUR GEMINI API KEY>"
+
 async def run_agent():
     async with stdio_client(server_params) as (read, write):
         async with ClientSession(read, write) as session:
@@ -35,9 +40,15 @@ async def run_agent():
 
             # Option 1, Using Gemini 2.0 Flash model (Very Fast)
             # llm = init_chat_model("google_genai:gemini-2.0-flash")
+            
+            llm = ChatGoogleGenerativeAI(
+                model="gemini-2.0-flash",
+                temperature=0.3,
+                google_api_key=GOOGLE_API_KEY  # Make sure this is loaded from .env or defined earlier
+            )
 
             # Option 2, Using Ollama Local Model (Super Slow, since they run locally)
-            llm = ChatOllama(model="qwen3:14b", temperature=0)
+            # llm = ChatOllama(model="qwen3:14b", temperature=0)
 
             agent = create_react_agent(llm, tools)
 
